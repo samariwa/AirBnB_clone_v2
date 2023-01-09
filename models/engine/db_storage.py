@@ -24,9 +24,6 @@ class DBStorage:
                         os.environ['HBNB_MYSQL_HOST'],
                         os.environ['HBNB_MYSQL_DB'],
                         pool_pre_ping=True))
-        __session = sessionmaker(bind=self.__engine, expire_on_commit=False)
-        Session = scoped_session(__session)
-        self.__session = Session()
         try:
             if os.environ['HBNB_ENV'] == 'test':
                 Base.metadata.drop_all(self.__engine)
@@ -58,4 +55,6 @@ class DBStorage:
 
     def reload(self):
         Base.metadata.create_all(self.__engine)
-        #self.__session.expire_on_commit=False
+        __session = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        Session = scoped_session(__session)
+        self.__session = Session()
